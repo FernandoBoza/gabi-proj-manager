@@ -11,8 +11,7 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  // login(@Body() req: User): Observable<UserDocument | string> {
-  login(@Body() req: User) {
+  login(@Body() req: User): Observable<string | any> {
     return from(this.as.login(req));
   }
 

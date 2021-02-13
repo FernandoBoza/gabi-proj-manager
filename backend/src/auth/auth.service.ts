@@ -16,20 +16,21 @@ export class AuthService {
   ) {}
 
   // public async login({ email, password }): Promise<UserDocument | string> {
-  public async login({ email, password }) {
+  public async login(user: UserType) {
+    const { email, password, _id } = user;
     try {
       const res = await this.userModel.findOne({ email });
       return res && (await bcrypt.compare(password, res.password))
-        ? res
+        ? this.getToken(email, _id)
         : 'Nah Bro, wrong password 🤡';
     } catch (err) {
       console.error(err);
     }
   }
 
-  public async login2({ email, _id }) {
+  public async getToken(email, sub) {
     return {
-      access_token: this.jwtService.sign({ email, sub: _id }),
+      access_token: this.jwtService.signAsync({ email, sub: sub }),
     };
   }
 
