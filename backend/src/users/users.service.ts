@@ -10,7 +10,7 @@ export class UsersService {
   public async findUserByEmail(email: string) {
     try {
       const User = await this.userModel.findOne({ email });
-      return User ? User : 'Nah Bro, no account 🤡';
+      return User ? User : 'Nah bro, no account 🤡';
     } catch (err) {
       console.error(err);
     }
