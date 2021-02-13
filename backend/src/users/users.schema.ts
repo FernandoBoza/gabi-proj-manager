@@ -1,8 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
 import UserInterface from './users.interface';
-
-export type UserDocument = UserInterface & Document;
+import { Document } from 'mongoose';
 
 @Schema()
 export class User implements UserInterface {
@@ -21,5 +19,7 @@ export class User implements UserInterface {
   @Prop()
   imageURL: string;
 }
+
+export type UserDocument = User & Document;
 
 export const UserSchema = SchemaFactory.createForClass(User);

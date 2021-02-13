@@ -1,47 +1,40 @@
+import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from '../users/users.schema';
+import { User, UserDocument } from '../users/users.schema';
 import UserType from '../users/users.interface';
 import * as bcrypt from 'bcrypt';
 
+console.clear();
+
 @Injectable()
 export class AuthService {
-  constructor(@InjectModel(User.name) private userModel) {
-    console.clear();
-  }
+  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-  private genPassword = async (password: string): Promise<string> => {
-    return bcrypt.hash(password, bcrypt.genSaltSync());
-  };
-
-  private isMatch = async (password, hash) => {
-    return await bcrypt.compare(password, hash);
-  };
-
-  public login({ email, password }): UserType {
+  public login({ email, password }) {
     try {
-      const user = this.userModel.find({ email: email });
-      if (user) {
-        return user
-          .then((user) => user[0].password)
-          .then((hashPass) => this.isMatch(password, hashPass))
-          .then((isMatch) => (isMatch ? user : 'wrong credentials'));
-      }
+      const user = this.userModel.findOne({ email: email }).then((res) => {
+        if (res && bcrypt.compareSync(password, res.password)) {
+          return res;
+        } else {
+          return 'Nah Bro';
+        }
+      });
+      // if (user == null && bcrypt.compareSync(password, user['password'])) {
+      return user;
+      // }
     } catch (err) {
       console.error(err);
     }
   }
 
-  public register(user: UserType): UserType | string {
-    const hashPass = this.genPassword(user.password);
+  public register(user: UserType) {
     try {
-      hashPass.then((pass) => {
-        user.password = pass;
-        return new this.userModel(user).save();
-      });
+      user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync());
+      return new this.userModel(user).save();
     } catch (err) {
       console.error(err);
-      return 'Email already exist';
+      return 'Email Already In Use';
     }
   }
 }
