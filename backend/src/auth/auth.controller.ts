@@ -8,12 +8,9 @@ import { Observable, of, from } from 'rxjs';
 export class AuthController {
   constructor(private as: AuthService) {}
 
-  //TODO: REVERT BACK TO OBSERVABLE
-  // Observable<UserDocument | string>
-  // return from()
   @Post('login')
-  login(@Body() req: User) {
-    return this.as.login(req);
+  login(@Body() req: User): Observable<UserDocument | string> {
+    return from(this.as.login(req));
   }
 
   @Post('register')
