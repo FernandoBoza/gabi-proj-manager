@@ -3,11 +3,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { join } from 'path';
 import {
   MongooseModule,
   MongooseModuleOptions,
   MongooseOptionsFactory,
 } from '@nestjs/mongoose';
+import { GraphQLModule } from '@nestjs/graphql';
 
 @Injectable()
 class MongoOptions implements MongooseOptionsFactory {
@@ -22,6 +24,12 @@ class MongoOptions implements MongooseOptionsFactory {
   imports: [
     AuthModule,
     UsersModule,
+    GraphQLModule.forRoot({
+      playground: true,
+      debug: false,
+      include: [UsersModule],
+      autoSchemaFile: true,
+    }),
     MongooseModule.forRootAsync({
       useClass: MongoOptions,
     }),
