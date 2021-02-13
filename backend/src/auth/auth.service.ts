@@ -1,5 +1,5 @@
 import { Model } from 'mongoose';
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from '../users/users.schema';
 import UserType from '../users/users.interface';
@@ -13,10 +13,10 @@ export class AuthService {
 
   public async login({ email, password }) {
     try {
-      const res = await this.userModel.findOne({ email: email });
+      const res = await this.userModel.findOne({ email });
       return res && (await bcrypt.compare(password, res.password))
         ? res
-        : 'Nah Bro';
+        : 'Nah Bro, wrong password 🤡';
     } catch (err) {
       console.error(err);
     }
@@ -26,7 +26,7 @@ export class AuthService {
     try {
       const isUser = await this.userModel.findOne({ email: user.email });
       if (isUser) {
-        return 'Nah Bro';
+        return 'Nah Bro, you already exist 🤡';
       } else {
         user.password = await bcrypt.hash(user.password, 10).then((r) => r);
         return new this.userModel(user).save();
