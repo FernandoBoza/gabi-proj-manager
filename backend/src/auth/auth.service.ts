@@ -16,12 +16,11 @@ export class AuthService {
   ) {}
 
   // public async login({ email, password }): Promise<UserDocument | string> {
-  public async login(user: UserType) {
-    const { email, password, _id } = user;
+  public async login({ email, password }) {
     try {
       const res = await this.userModel.findOne({ email });
       return res && (await bcrypt.compare(password, res.password))
-        ? this.getToken(email, _id)
+        ? this.getToken(email, res._id).then((result) => result)
         : 'Nah Bro, wrong password 🤡';
     } catch (err) {
       console.error(err);
@@ -30,7 +29,7 @@ export class AuthService {
 
   public async getToken(email, sub) {
     return {
-      access_token: this.jwtService.signAsync({ email, sub: sub }),
+      access_token: await this.jwtService.signAsync({ email, sub: sub }),
     };
   }
 
