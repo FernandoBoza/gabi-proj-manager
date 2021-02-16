@@ -1,6 +1,6 @@
 import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
-import User from './users.interface';
+import User from './users.model';
 import { from, Observable } from 'rxjs';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Roles } from '../auth/roles/roles.decorator';

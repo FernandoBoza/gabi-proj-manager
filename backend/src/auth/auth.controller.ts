@@ -1,6 +1,6 @@
 import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import User from '../users/users.interface';
+import User from '../users/users.model';
 import { UserDocument } from '../users/users.schema';
 import { Observable, from } from 'rxjs';
 import { LocalAuthGuard } from './guards/local.guard';

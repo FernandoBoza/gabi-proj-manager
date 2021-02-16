@@ -1,9 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import UserInterface from './users.interface';
+import UserModel from './users.model';
 import { Document } from 'mongoose';
 
 @Schema()
-export class User implements UserInterface {
+export class User extends UserModel {
   @Prop({ required: true })
   firstName: string;
 

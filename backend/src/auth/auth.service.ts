@@ -2,11 +2,9 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
 import { User, UserDocument } from '../users/users.schema';
-import UserType from '../users/users.interface';
+import UserType from '../users/users.model';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-
-console.clear();
 
 @Injectable()
 export class AuthService {
@@ -15,8 +13,10 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  // public async login({ email, password }): Promise<UserDocument | string> {
-  public async login({ email, password }) {
+  public async login({
+    email,
+    password,
+  }): Promise<{ access_token: string } | string> {
     try {
       const res = await this.userModel.findOne({ email });
       return res && (await bcrypt.compare(password, res.password))
@@ -27,14 +27,13 @@ export class AuthService {
     }
   }
 
-  public async getToken(email, sub) {
+  public async getToken(email, sub): Promise<{ access_token: string }> {
     return {
       access_token: await this.jwtService.signAsync({ email, sub: sub }),
     };
   }
 
-  // public async login({ email, password }): Promise<UserDocument | string> {
-  public async register(user: UserType) {
+  public async register(user: UserType): Promise<UserDocument | string> {
     try {
       const isUser = await this.userModel.findOne({ email: user.email });
       if (isUser) {
