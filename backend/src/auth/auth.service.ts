@@ -13,10 +13,15 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
+<<<<<<< HEAD
   public async login({
     email,
     password,
   }): Promise<{ access_token: string } | string> {
+=======
+  // public async login({ email, password }): Promise<UserDocument | string> {
+  public async login({ email, password }) {
+>>>>>>> ccce7b45632677ed6cd1e6b41f6cadde677710f2
     try {
       const res = await this.userModel.findOne({ email });
       return res && (await bcrypt.compare(password, res.password))
