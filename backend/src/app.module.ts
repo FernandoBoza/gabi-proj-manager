@@ -23,12 +23,11 @@ class MongoOptions implements MongooseOptionsFactory {
   imports: [
     AuthModule,
     UsersModule,
-    // GraphQLModule.forRoot({
-    //   playground: true,
-    //   debug: false,
-    //   include: [UsersModule],
-    //   autoSchemaFile: true,
-    // }),
+    GraphQLModule.forRoot({
+      playground: true,
+      debug: false,
+      autoSchemaFile: true,
+    }),
     MongooseModule.forRootAsync({
       useClass: MongoOptions,
     }),

@@ -28,7 +28,7 @@
     "@nestjs/mongoose": "^7.2.3",
     "@nestjs/passport": "^7.1.5",
     "@nestjs/platform-fastify": "^7.6.12",
-    "apollo-server-fastify": "^2.21.0",
+    "apollo-server-fastify": "^3.0.0-alpha.3",
     "bcrypt": "^5.0.0",
     "graphql": "^15.5.0",
     "graphql-tools": "^7.0.3",
