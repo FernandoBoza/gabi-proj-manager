@@ -1,6 +1,11 @@
-import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+import {
+  Field,
+  InputType,
+  ObjectType,
+  registerEnumType,
+} from '@nestjs/graphql';
 
-enum Roles {
+export enum Roles {
   Admin = 'Admin',
   Basic = 'Basic',
 }
@@ -31,5 +36,23 @@ export default class User {
   imageURL?: string;
 
   @Field((type) => Roles)
+  role?: Roles;
+}
+
+@InputType()
+export class InputUser extends User {
+  @Field()
+  firstName: string;
+
+  @Field()
+  lastName: string;
+
+  @Field()
+  password: string;
+
+  @Field()
+  email: string;
+
+  @Field({ defaultValue: Roles.Admin })
   role: Roles;
 }

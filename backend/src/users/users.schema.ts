@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import UserModel from './users.model';
+import UserModel, { Roles } from './users.model';
 import { Document } from 'mongoose';
 
 @Schema()
@@ -18,6 +18,9 @@ export class User extends UserModel {
 
   @Prop()
   imageURL: string;
+
+  @Prop()
+  role: Roles;
 }
 
 export type UserDocument = User & Document;
