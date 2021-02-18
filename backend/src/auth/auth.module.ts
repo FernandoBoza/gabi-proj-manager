@@ -1,12 +1,16 @@
+/*
+ *
+ * 3rd Party Imports
+ *
+ * */
 import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { User, UserSchema } from '../users/users.schema';
-import { LocalStrategy } from './strategies/local.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
+
+import { User, UserSchema } from '../users/users.schema';
+import { AuthService } from './auth.service';
 import { jwtConstants } from './contants';
-import { JwtStrategy } from './strategies/jwt.strategy';
 import { AuthResolver } from './auth.resolver';
 import { UsersModule } from '../users/users.module';
 
@@ -21,7 +25,7 @@ import { UsersModule } from '../users/users.module';
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
   controllers: [],
-  providers: [AuthService, LocalStrategy, JwtStrategy, AuthResolver],
+  providers: [AuthService, AuthResolver],
   exports: [AuthService],
 })
 export class AuthModule {}

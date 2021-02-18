@@ -13,6 +13,11 @@ export class Token {
 export class AuthResolver {
   constructor(private as: AuthService) {}
 
+  /* Register: CREATE User
+   *
+   * @Params(User => fistName, lastName, email, password, confPass)
+   *
+   * */
   @Mutation(() => User)
   async register(
     @Args('userInput') userInput: InputUser,
@@ -20,6 +25,11 @@ export class AuthResolver {
     return await this.as.register(userInput);
   }
 
+  /* Login: VALIDATES & JWT Token
+   *
+   * @Params(email, password =>  email, password )
+   *
+   * */
   @Mutation(() => Token)
   async login(
     @Args('email') email: string,
@@ -28,6 +38,11 @@ export class AuthResolver {
     return { bearer: await this.as.login({ email, password }) };
   }
 
+  /* Register: UPDATES User
+   *
+   * @Params(User => fistName, lastName, email, password, confPass)
+   *
+   * */
   @Mutation(() => User)
   async updatePassword(
     @Args('email') email: string,
