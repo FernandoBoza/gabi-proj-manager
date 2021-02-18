@@ -1,5 +1,4 @@
 import { Injectable, Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
@@ -46,7 +45,7 @@ class GraphQLOptions implements GqlOptionsFactory {
       useClass: MongoOptions,
     }),
   ],
-  controllers: [AppController],
+  controllers: [],
   providers: [AppService],
 })
 export class AppModule {}
