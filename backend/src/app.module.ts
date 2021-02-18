@@ -30,6 +30,7 @@ class GraphQLOptions implements GqlOptionsFactory {
       playground: true,
       debug: false,
       autoSchemaFile: true,
+      context: ({ request }) => ({ request }),
     };
   }
 }
