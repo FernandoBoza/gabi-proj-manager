@@ -13,10 +13,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  public async login({
-    email,
-    password,
-  }): Promise<{ access_token: string } | string> {
+  public async login({ email, password }): Promise<string> {
     try {
       const res = await this.userModel.findOne({ email });
       return res && (await bcrypt.compare(password, res.password))
@@ -27,10 +24,8 @@ export class AuthService {
     }
   }
 
-  public async getToken(email, sub): Promise<{ access_token: string }> {
-    return {
-      access_token: await this.jwtService.signAsync({ email, sub: sub }),
-    };
+  public async getToken(email, sub): Promise<string> {
+    return await this.jwtService.signAsync({ email, sub: sub });
   }
 
   public async register(user: UserType): Promise<UserDocument | string> {
@@ -42,6 +37,19 @@ export class AuthService {
         user.password = await bcrypt.hash(user.password, 10).then((r) => r);
         return new this.userModel(user).save();
       }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  public async updatePassword(email, currentPass, newPass) {
+    try {
+      const user = await this.userModel.findOne({ email });
+      if (await bcrypt.compare(currentPass, user.password)) {
+        user.password = await bcrypt.hash(newPass, 10).then((r) => r);
+        return new this.userModel(user).save();
+      }
+      return;
     } catch (err) {
       console.error(err);
     }

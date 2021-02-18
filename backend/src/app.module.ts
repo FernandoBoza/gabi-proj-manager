@@ -8,7 +8,11 @@ import {
   MongooseModuleOptions,
   MongooseOptionsFactory,
 } from '@nestjs/mongoose';
-import { GraphQLModule } from '@nestjs/graphql';
+import {
+  GqlModuleOptions,
+  GqlOptionsFactory,
+  GraphQLModule,
+} from '@nestjs/graphql';
 
 @Injectable()
 class MongoOptions implements MongooseOptionsFactory {
@@ -19,16 +23,25 @@ class MongoOptions implements MongooseOptionsFactory {
   }
 }
 
+@Injectable()
+class GraphQLOptions implements GqlOptionsFactory {
+  createGqlOptions(): Promise<GqlModuleOptions> | GqlModuleOptions {
+    return {
+      playground: true,
+      debug: false,
+      autoSchemaFile: true,
+      context: ({ request }) => ({ request }),
+    };
+  }
+}
+
 @Module({
   imports: [
     AuthModule,
     UsersModule,
-    // GraphQLModule.forRoot({
-    //   playground: true,
-    //   debug: false,
-    //   include: [UsersModule],
-    //   autoSchemaFile: true,
-    // }),
+    GraphQLModule.forRootAsync({
+      useClass: GraphQLOptions,
+    }),
     MongooseModule.forRootAsync({
       useClass: MongoOptions,
     }),
