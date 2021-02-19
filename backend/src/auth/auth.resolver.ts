@@ -1,7 +1,21 @@
-import { Args, Field, Mutation, ObjectType, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Field,
+  Mutation,
+  Query,
+  ObjectType,
+  Resolver,
+  GqlExecutionContext,
+} from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import User, { InputUser } from '../users/users.model';
 import { UserDocument } from '../users/users.schema';
+import {
+  UseGuards,
+  createParamDecorator,
+  ExecutionContext,
+} from '@nestjs/common';
+import { GqlAuthGuard } from './auth.guard';
 
 @ObjectType()
 export class Token {
@@ -9,15 +23,16 @@ export class Token {
   bearer: string;
 }
 
+export const CurrentUser = createParamDecorator(
+  (data: unknown, context: ExecutionContext) => {
+    return GqlExecutionContext.create(context).getContext().req.user;
+  },
+);
+
 @Resolver()
 export class AuthResolver {
   constructor(private as: AuthService) {}
 
-  /* Register: CREATE User
-   *
-   * @Params(User => fistName, lastName, email, password, confPass)
-   *
-   * */
   @Mutation(() => User)
   async register(
     @Args('userInput') userInput: InputUser,
@@ -25,11 +40,6 @@ export class AuthResolver {
     return await this.as.register(userInput);
   }
 
-  /* Login: VALIDATES & JWT Token
-   *
-   * @Params(email, password =>  email, password )
-   *
-   * */
   @Mutation(() => Token)
   async login(
     @Args('email') email: string,
@@ -38,11 +48,12 @@ export class AuthResolver {
     return { bearer: await this.as.login({ email, password }) };
   }
 
-  /* Register: UPDATES User
-   *
-   * @Params(User => fistName, lastName, email, password, confPass)
-   *
-   * */
+  @Query(() => User, { name: 'whoAmI' })
+  @UseGuards(GqlAuthGuard)
+  async whoAmI(@CurrentUser() user: User): Promise<UserDocument | string> {
+    return this.as.findUserByEmail(user.email);
+  }
+
   @Mutation(() => User)
   async updatePassword(
     @Args('email') email: string,

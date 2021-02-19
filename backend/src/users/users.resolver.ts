@@ -8,22 +8,12 @@ import { GqlAuthGuard } from '../auth/auth.guard';
 export class UsersResolver {
   constructor(private us: UsersService) {}
 
-  /* FINDUSERBYEMAIL: Gets a user by email
-   *
-   * @Params(email => User)
-   *
-   * */
   @Query(() => User)
   @UseGuards(GqlAuthGuard)
   async findUserByEmail(@Args('email') email: string) {
     return await this.us.findUserByEmail(email);
   }
 
-  /* FINDALLUSERS: Gets all users
-   *
-   * @Params()
-   *
-   * */
   @Query(() => [User])
   @UseGuards(GqlAuthGuard)
   async findAllUsers() {

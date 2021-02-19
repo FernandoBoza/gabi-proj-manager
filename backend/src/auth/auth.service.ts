@@ -54,4 +54,13 @@ export class AuthService {
       console.error(err);
     }
   }
+
+  public async findUserByEmail(email: string): Promise<UserDocument | string> {
+    try {
+      const User = await this.userModel.findOne({ email });
+      return (await User) ? User : 'Nah bro, no account 🤡';
+    } catch (err) {
+      console.error(err);
+    }
+  }
 }
