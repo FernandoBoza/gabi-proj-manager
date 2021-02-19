@@ -42,14 +42,13 @@ export class AuthService {
     }
   }
 
-  public async updatePassword(email, currentPass, newPass) {
+  public async updatePassword(userEmail, userPass, newPass) {
     try {
-      const user = await this.userModel.findOne({ email });
-      if (await bcrypt.compare(currentPass, user.password)) {
-        user.password = await bcrypt.hash(newPass, 10).then((r) => r);
-        return new this.userModel(user).save();
+      const User = await this.userModel.findOne({ email: userEmail });
+      if (await bcrypt.compare(userPass, User.password)) {
+        User.password = await bcrypt.hash(newPass, 10);
+        return await new this.userModel(User).save();
       }
-      return;
     } catch (err) {
       console.error(err);
     }
