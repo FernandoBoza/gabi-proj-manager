@@ -25,7 +25,11 @@ export class AuthService {
   }
 
   public async getToken(email, sub): Promise<string> {
-    return await this.jwtService.signAsync({ email, sub: sub });
+    try {
+      return await this.jwtService.signAsync({ email, sub: sub });
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   public async register(user: UserType): Promise<UserDocument | string> {
@@ -49,6 +53,16 @@ export class AuthService {
         User.password = await bcrypt.hash(newPass, 10);
         return await new this.userModel(User).save();
       }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  public async updateUser(userId, newUser) {
+    try {
+      return await this.userModel.findByIdAndUpdate({ _id: userId }, newUser, {
+        new: true,
+      });
     } catch (err) {
       console.error(err);
     }
