@@ -7,7 +7,7 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
-import User, { InputUser } from '../users/users.model';
+import User, { InputUser, UpdateUserInput } from '../users/users.model';
 import { UserDocument } from '../users/users.schema';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from './auth.guard';
@@ -52,5 +52,14 @@ export class AuthResolver {
     @Args('newPassword') newPassword: string,
   ): Promise<UserDocument | void> {
     return await this.as.updatePassword(user.email, password, newPassword);
+  }
+
+  @Mutation(() => User)
+  @UseGuards(GqlAuthGuard)
+  async updateUser(
+    @CurrentUser() user: User,
+    @Args('userInput') userInput: UpdateUserInput,
+  ): Promise<UserDocument | void> {
+    return this.as.updateUser(user._id, userInput);
   }
 }

@@ -2,6 +2,7 @@ import {
   Field,
   InputType,
   ObjectType,
+  PartialType,
   registerEnumType,
 } from '@nestjs/graphql';
 
@@ -35,12 +36,12 @@ export default class User {
   @Field({ nullable: true })
   imageURL?: string;
 
-  @Field((type) => Roles)
+  @Field((type) => Roles, { defaultValue: Roles.Admin })
   role?: Roles;
 }
 
 @InputType()
-export class InputUser extends User {
+export class InputUser {
   @Field()
   firstName: string;
 
@@ -53,6 +54,9 @@ export class InputUser extends User {
   @Field()
   email: string;
 
-  @Field({ defaultValue: Roles.Admin })
+  @Field((type) => Roles, { defaultValue: Roles.Admin })
   role: Roles;
 }
+
+@InputType()
+export class UpdateUserInput extends PartialType(InputUser) {}
