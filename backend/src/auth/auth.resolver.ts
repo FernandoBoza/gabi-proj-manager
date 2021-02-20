@@ -60,6 +60,6 @@ export class AuthResolver {
     @CurrentUser() user: User,
     @Args('userInput') userInput: UpdateUserInput,
   ): Promise<UserDocument | void> {
-    return this.as.updateUser(user._id, userInput);
+    return await this.as.updateUser(user._id, userInput);
   }
 }
