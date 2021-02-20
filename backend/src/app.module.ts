@@ -12,6 +12,9 @@ import {
   GqlOptionsFactory,
   GraphQLModule,
 } from '@nestjs/graphql';
+import { ProjectsModule } from './projects/projects.module';
+import { TasksModule } from './tasks/tasks.module';
+import { CommentsModule } from './comments/comments.module';
 
 @Injectable()
 class MongoOptions implements MongooseOptionsFactory {
@@ -44,6 +47,9 @@ class GraphQLOptions implements GqlOptionsFactory {
     MongooseModule.forRootAsync({
       useClass: MongoOptions,
     }),
+    ProjectsModule,
+    TasksModule,
+    CommentsModule,
   ],
   controllers: [],
   providers: [AppService],
